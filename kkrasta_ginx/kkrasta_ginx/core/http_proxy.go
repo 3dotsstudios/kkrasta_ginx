@@ -12,13 +12,11 @@ import (
 	"bytes"
 	"crypto/rand"
 	"crypto/rc4"
-	"crypto/sha256"
 	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"html"
-	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -36,7 +34,6 @@ import (
 
 	"github.com/elazarl/goproxy"
 	"github.com/fatih/color"
-	"github.com/go-acme/lego/v3/challenge/tlsalpn01"
 	"github.com/inconshreveable/go-vhost"
 	http_dialer "github.com/mwitkow/go-http-dialer"
 
